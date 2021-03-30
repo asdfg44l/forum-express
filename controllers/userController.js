@@ -7,23 +7,24 @@ const userController = {
   },
 
   signUp: async (req, res) => {
-    const { name, email, password } = req.body
-
+    const { name, email, password, confirmPassword } = req.body
+    if (password !== confirmPassword) {
+      req.flash('error_msg', '密碼與確認密碼不一致')
+      return res.redirect('/users/signUp')
+    }
     try {
       let user = await User.findOne({ where: { email } })
       if (user) {
-        console.log('此帳號已被註冊')
-        return res.render('signUp', {
-          name,
-          email
-        })
+        req.flash('error_msg', '此帳號已被註冊')
+        return res.redirect('/users/signUp')
       }
       await User.create({
         name,
         email,
         password: bcrypt.hashSync(password, bcrypt.genSaltSync(10), null)
       })
-      return res.redirect('/')
+      req.flash('success_msg', '成功註冊帳號!')
+      return res.redirect('/signIn')
     } catch (e) {
       console.warn(e)
     }
