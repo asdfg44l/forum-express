@@ -1,5 +1,6 @@
 const restController = require('../controllers/restController')
 const adminController = require('../controllers/adminController')
+const userController = require('../controllers/userController')
 
 module.exports = app => {
   //rest
@@ -13,4 +14,8 @@ module.exports = app => {
     return res.redirect('/admin/restaurants')
   })
   app.get('/admin/restaurants', adminController.getRestaurants)
+
+  //user
+  app.get('/users/signUp', userController.signUpPage)
+  app.post('/users/signUp', userController.signUp)
 }
