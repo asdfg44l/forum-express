@@ -10,9 +10,29 @@
 </head>
 
 <body>
-  <div class="container-fluid">
-    {{{ body }}}
-  </div>
+  <header>
+    <!-- navigation -->
+    <nav class="navbar navbar-light bg-light">
+      <div class="container-fluid d-flex justify-content-between">
+        <a class="navbar-brand" href="/">
+          <img src="https://assets-lighthouse.s3.amazonaws.com/uploads/image/file/6227/restaurant-list-logo.png"
+            width="30" height="30" class="d-inline-block align-top" alt="我的餐廳清單">
+          {{#if isAuthenticated}}{{ user.name }}{{else}}我{{/if}}的餐廳清單
+        </a>
+        <div>
+          <a href="/restaurants/add" class="btn">新增餐廳</a>
+          {{#if isAuthenticated}}
+          <a href="/users/logout" class="btn">登出</a>
+          {{else}}
+          <a href="/users/signIn" class="btn">登入</a>
+          {{/if}}
+        </div>
+      </div>
+    </nav>
+
+    <div class="banner"></div>
+  </header>
+  {{{ body }}}
 
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
     integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

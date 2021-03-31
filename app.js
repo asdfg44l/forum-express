@@ -5,6 +5,9 @@ const db = require('./models')
 const { urlencoded } = require('body-parser')
 const flash = require('connect-flash')
 const session = require('express-session')
+const passport = require('passport')
+
+const usePassport = require('./config/passport')
 
 const port = 3000
 
@@ -22,6 +25,9 @@ app.use(session({
   saveUninitialized: true
 }))
 
+//usePassport
+usePassport(app)
+
 //flash
 app.use(flash())
 
@@ -37,6 +43,6 @@ app.use((req, res, next) => {
   return next()
 })
 
-require('./routes')(app)
+require('./routes')(app, passport)
 
 module.exports = app
