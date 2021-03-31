@@ -22,7 +22,7 @@ module.exports = app => {
         }
         user = user.toJSON()
         //password compare
-        if (!await bcrypt.compare(user.password, password)) {
+        if (!await bcrypt.compare(password, user.password)) {
           return done(null, false, req.flash('error_msg', '密碼不符'))
         }
         return done(null, user)
