@@ -32,6 +32,9 @@ usePassport(app)
 //flash
 app.use(flash())
 
+//path
+app.use('/upload', express.static(__dirname + '/upload'))
+
 //listening
 app.listen(port, () => {
   db.sequelize.sync()

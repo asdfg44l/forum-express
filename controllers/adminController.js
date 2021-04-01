@@ -1,3 +1,4 @@
+const fs = require('fs')
 const { Restaurant } = require('../models')
 
 const adminController = {
@@ -15,10 +16,37 @@ const adminController = {
   },
   postRestaurat: async (req, res) => {
     const { name, tel, address, opening_hours, description } = req.body
+    const { file } = req
     try {
-      await Restaurant.create({ name, tel, address, opening_hours, description })
-      req.flash('success_msg', `成功新增餐廳: "${name}"`)
-      return res.redirect('/admin/restaurants')
+      if (file) {
+        console.log(file)
+        fs.readFile(file.path, (err, data) => {
+          if (err) console.log('Error', err)
+          fs.writeFile(`upload/${file.originalname}`, data, async () => {
+            await Restaurant.create({
+              name,
+              tel,
+              address,
+              opening_hours,
+              description,
+              image: file ? `/upload/${file.originalname}` : null
+            })
+            req.flash('success_msg', `成功新增餐廳: "${name}"`)
+            return res.redirect('/admin/restaurants')
+          })
+        })
+      } else {
+        await Restaurant.create({
+          name,
+          tel,
+          address,
+          opening_hours,
+          description,
+          image: file ? `upload/${file.originalname}` : null
+        })
+        req.flash('success_msg', `成功新增餐廳: "${name}"`)
+        return res.redirect('/admin/restaurants')
+      }
     } catch (e) {
       console.warn(e)
     }
@@ -52,8 +80,39 @@ const adminController = {
 
   putRestaurant: async (req, res) => {
     const restaurant_id = req.params.id
-    const { name, tel, address, opening_hours, description } = req.body
+    const { name, tel, address, opening_hours, description, image } = req.body
+    const { file } = req
     try {
+      if (file) {
+        fs.readFile(file.path, (err, data) => {
+          if (err) console.log("Error: ", err)
+          fs.writeFile(`upload/${file.originalname}`, data, async () => {
+            let restaurant = await Restaurant.findByPk(restaurant_id)
+            await restaurant.update({
+              name,
+              tel,
+              address,
+              opening_hours,
+              description,
+              image: file ? `/upload/${file.originalname}` : restaurant.image
+            })
+            req.flash('success_msg', `成功修改餐廳: "${name}"`)
+            return res.redirect('/admin/restaurants')
+          })
+        })
+      } else {
+        let restaurant = await Restaurant.findByPk(restaurant_id)
+        await restaurant.update({
+          name,
+          tel,
+          address,
+          opening_hours,
+          description,
+          image: file ? `/upload/${file.originalname}` : restaurant.image
+        })
+        req.flash('success_msg', `成功修改餐廳: "${name}"`)
+        return res.redirect('/admin/restaurants')
+      }
       let restaurant = await Restaurant.findByPk(restaurant_id)
       await restaurant.update({ name, tel, address, opening_hours, description })
 
