@@ -17,12 +17,15 @@
         <a class="navbar-brand" href="/">
           <img src="https://assets-lighthouse.s3.amazonaws.com/uploads/image/file/6227/restaurant-list-logo.png"
             width="30" height="30" class="d-inline-block align-top" alt="我的餐廳清單">
-          {{#if isAuthenticated}}{{ user.name }}{{else}}我{{/if}}的餐廳清單
+          {{#if isAuthenticated}}{{ user.name }}{{else}}我{{/if}}的餐廳{{#if isAdmin}}後台{{else}}清單{{/if}}
         </a>
         <div>
           {{#if isAdmin}}
-          <a href="/restaurants/add" class="btn">新增餐廳</a>
+          <a href="/admin/restaurants/create" class="btn">新增餐廳</a>
+          {{else}}
+          <a href="/admin/restaurants" class="btn">前往後台</a>
           {{/if}}
+
           {{#if isAuthenticated}}
           <a href="/users/logout" class="btn">登出</a>
           {{else}}

@@ -1,5 +1,5 @@
 <!-- search bar -->
-<div class="container search-bar">
+{{!-- <div class="container search-bar">
   <div class="search-bar-outer">
     <div class="search-bar-inner">
       <form action="/admin/restaurants">
@@ -14,13 +14,15 @@
       </form>
     </div>
   </div>
-</div>
+</div> --}}
 
 
 
-<div class="container mt-3">
+<div class="container-fluid mt-3">
   <div class="row">
     <div class="col-md-10 col-12 mx-auto">
+      <h3>餐廳列表</h3>
+      {{>message}}
       <!--sort bar-->
       {{!-- <div class="row mb-3 justify-content-end">
         <div class="col-md-4">
@@ -40,35 +42,38 @@
         </div>
       </div> --}}
       <!-- restaurant list -->
-      <div class="card-columns">
-        {{#each restaurants}}
-        <a href="/restaurant/{{ this.id }}" class="text-secondary">
-          <div class="card mb-3">
-            <img class="card-img-top" src="{{ this.image }}" alt="{{ this.name }}">
-            <div class="card-body p-3">
-              <h6 class="card-title mb-1">{{ this.name }}</h6>
-
-              <div class="restaurant-category mb-1">
-                <i class="fas fa-utensils pr-2"></i> {{ this.category }}
-              </div>
-              <div class="restaurant-category mb-1">
-                <i class="fas fa-map-marker-alt pr-2"></i> {{ this.location }}
-              </div>
-              <span class="badge badge-pill badge-danger font-weight-normal">
-                {{ this.rating }}
-                <i class="fas fa-star fa-xs"></i>
-              </span>
-              <div class="d-flex justify-content-end py-2">
-                <a href="/restaurant/edit/{{ this.id }}" type="button" class="btn btn-sm btn-outline-primary">編輯</a>
-                <form class="mx-2" action="./restaurant/{{ this.id }}?_method=DELETE" method="POST">
-                  <button type="submit" class="btn btn-sm btn-danger" onclick="return confirmWhileDelete()">刪除</button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </a>
-        {{/each}}
-      </div>
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th width="50%" scope="col">Name</th>
+            <th scope="col">#</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each restaurants}}
+          <tr>
+            <th scope="row">{{this.id}}</th>
+            <td>{{this.name}}</td>
+            <td>
+              <button type="button" class="btn btn-link">
+                <a href="/admin/restaurants/{{this.id}}">
+                  Show
+                </a>
+              </button>
+              <button type="button" class="btn btn-link">
+                <a href="/admin/restaurants/{{this.id}}/edit">
+                  Edit
+                </a>
+              </button>
+              <form action="/admin/restaurants/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-link">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
