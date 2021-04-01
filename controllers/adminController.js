@@ -33,6 +33,34 @@ const adminController = {
     } catch (e) {
       console.warn(e)
     }
+  },
+
+  editRestaurant: async (req, res) => {
+    const restaurant_id = req.params.id
+    const config = {
+      pageTitle: '修改餐廳',
+      method: `/admin/restaurants/${restaurant_id}?_method=PUT`
+    }
+    try {
+      let restaurant = await Restaurant.findByPk(restaurant_id, { raw: true })
+
+      return res.render('admin/create', { config, restaurant })
+    } catch (e) {
+      console.warn(e)
+    }
+  },
+
+  putRestaurant: async (req, res) => {
+    const restaurant_id = req.params.id
+    const { name, tel, address, opening_hours, description } = req.body
+    try {
+      let restaurant = await Restaurant.findByPk(restaurant_id)
+      await restaurant.update({ name, tel, address, opening_hours, description })
+
+      return res.redirect('/admin/restaurants')
+    } catch (e) {
+      console.warn(e)
+    }
   }
 }
 

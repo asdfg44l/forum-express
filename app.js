@@ -5,6 +5,7 @@ const db = require('./models')
 const { urlencoded } = require('body-parser')
 const flash = require('connect-flash')
 const session = require('express-session')
+const methodOverride = require('method-override')
 const passport = require('passport')
 const usePassport = require('./config/passport')
 const hbsHelpers = require('./utils/handlebarsHelpers')
@@ -17,7 +18,7 @@ app.set('view engine', 'hbs')
 
 //bodyParser
 app.use(urlencoded({ extended: true }))
-
+app.use(methodOverride('_method'))
 //session
 app.use(session({
   secret: 'GreenFrog',
