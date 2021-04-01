@@ -6,13 +6,13 @@ const { urlencoded } = require('body-parser')
 const flash = require('connect-flash')
 const session = require('express-session')
 const passport = require('passport')
-
 const usePassport = require('./config/passport')
+const hbsHelpers = require('./utils/handlebarsHelpers')
 
 const port = 3000
 
 //view engine
-app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
+app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs', helpers: hbsHelpers }))
 app.set('view engine', 'hbs')
 
 //bodyParser
@@ -38,6 +38,12 @@ app.listen(port, () => {
 })
 
 app.use((req, res, next) => {
+  const isAdmin = () => {
+    let isAdminPath = req.path.includes('/admin/')
+    let haveAdmin = req.user ? req.user.isAdmin : false
+    return isAdminPath && haveAdmin
+  }
+  res.locals.isAdmin = isAdmin()
   res.locals.isAuthenticated = req.isAuthenticated()
   res.locals.user = req.user
   res.locals.success_msg = req.flash('success_msg')

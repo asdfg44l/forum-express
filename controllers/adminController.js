@@ -1,6 +1,9 @@
+const { Restaurant } = require('../models')
+
 const adminController = {
-  getRestaurants: (req, res) => {
-    return res.render('admin/restaurants')
+  getRestaurants: async (req, res) => {
+    let restaurants = await Restaurant.findAll({ raw: true })
+    return res.render('admin/restaurants', { restaurants })
   }
 }
 
