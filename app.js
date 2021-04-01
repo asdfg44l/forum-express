@@ -10,7 +10,7 @@ const passport = require('passport')
 const usePassport = require('./config/passport')
 const hbsHelpers = require('./utils/handlebarsHelpers')
 
-const port = 3000
+const port = process.env.PORT || 3000
 
 //view engine
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs', helpers: hbsHelpers }))
