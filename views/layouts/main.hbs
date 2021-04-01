@@ -17,7 +17,7 @@
         <a class="navbar-brand" href="/">
           <img src="https://assets-lighthouse.s3.amazonaws.com/uploads/image/file/6227/restaurant-list-logo.png"
             width="30" height="30" class="d-inline-block align-top" alt="我的餐廳清單">
-          {{#if isAuthenticated}}{{ user.name }}{{else}}我{{/if}}的餐廳{{#if isAdmin}}後台{{else}}清單{{/if}}
+          餐廳評論網
         </a>
         <div>
           {{#if isAdmin}}
@@ -37,7 +37,9 @@
 
     <div class="banner"></div>
   </header>
-  {{{ body }}}
+  <div class="container-fluid">
+    {{{ body }}}
+  </div>
 
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
     integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

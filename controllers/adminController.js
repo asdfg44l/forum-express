@@ -22,6 +22,17 @@ const adminController = {
     } catch (e) {
       console.warn(e)
     }
+  },
+
+  getRestaurant: async (req, res) => {
+    const restaurant_id = req.params.id
+    try {
+      let restaurant = await Restaurant.findByPk(restaurant_id, { raw: true })
+
+      return res.render('admin/detail', { restaurant })
+    } catch (e) {
+      console.warn(e)
+    }
   }
 }
 
