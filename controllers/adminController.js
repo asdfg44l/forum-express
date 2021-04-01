@@ -19,9 +19,8 @@ const adminController = {
     const { file } = req
     try {
       if (file) {
-        console.log(file)
         fs.readFile(file.path, (err, data) => {
-          if (err) console.log('Error', err)
+          if (err) console.log("Error: ", err)
           fs.writeFile(`upload/${file.originalname}`, data, async () => {
             await Restaurant.create({
               name,
@@ -31,6 +30,7 @@ const adminController = {
               description,
               image: file ? `/upload/${file.originalname}` : null
             })
+
             req.flash('success_msg', `成功新增餐廳: "${name}"`)
             return res.redirect('/admin/restaurants')
           })
@@ -42,8 +42,9 @@ const adminController = {
           address,
           opening_hours,
           description,
-          image: file ? `upload/${file.originalname}` : null
+          image: null
         })
+
         req.flash('success_msg', `成功新增餐廳: "${name}"`)
         return res.redirect('/admin/restaurants')
       }
@@ -96,6 +97,7 @@ const adminController = {
               description,
               image: file ? `/upload/${file.originalname}` : restaurant.image
             })
+
             req.flash('success_msg', `成功修改餐廳: "${name}"`)
             return res.redirect('/admin/restaurants')
           })
@@ -108,15 +110,11 @@ const adminController = {
           address,
           opening_hours,
           description,
-          image: file ? `/upload/${file.originalname}` : restaurant.image
+          image: restaurant.image
         })
         req.flash('success_msg', `成功修改餐廳: "${name}"`)
         return res.redirect('/admin/restaurants')
       }
-      let restaurant = await Restaurant.findByPk(restaurant_id)
-      await restaurant.update({ name, tel, address, opening_hours, description })
-
-      return res.redirect('/admin/restaurants')
     } catch (e) {
       console.warn(e)
     }
