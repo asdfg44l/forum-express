@@ -8,6 +8,7 @@ const session = require('express-session')
 const methodOverride = require('method-override')
 const passport = require('passport')
 const usePassport = require('./config/passport')
+const helpers = require('./_helpers')
 const hbsHelpers = require('./utils/handlebarsHelpers')
 
 require('./config/dotent').loadEnv()
@@ -43,14 +44,15 @@ app.listen(port, () => {
 })
 
 app.use((req, res, next) => {
+  const user_from_passport = helpers.getUser(req)
   const isAdmin = () => {
     let isAdminPath = req.path.includes('/admin/')
-    let haveAdmin = req.user ? req.user.isAdmin : false
+    let haveAdmin = user_from_passport ? user_from_passport.isAdmin : false
     return isAdminPath && haveAdmin
   }
   res.locals.isAdmin = isAdmin()
-  res.locals.isAuthenticated = req.isAuthenticated()
-  res.locals.user = req.user
+  res.locals.isAuthenticated = helpers.ensureAuthenticated(req)
+  res.locals.user = user_from_passport
   res.locals.success_msg = req.flash('success_msg')
   res.locals.error_msg = req.flash('error_msg')
   return next()

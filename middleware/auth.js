@@ -1,6 +1,8 @@
+const helpers = require('../_helpers')
+
 module.exports = {
   authenticated: (req, res, next) => {
-    if (req.isAuthenticated()) {
+    if (helpers.ensureAuthenticated(req)) {
       return next()
     }
     req.flash('error_msg', '請先登入後才可使用')
@@ -8,7 +10,7 @@ module.exports = {
   },
 
   authenticatedAdmin: (req, res, next) => {
-    if (req.isAuthenticated() && req.user.isAdmin) {
+    if (helpers.ensureAuthenticated(req) && helpers.getUser(req).isAdmin) {
       return next()
     }
     req.flash('error_msg', '您沒有此功能的權限')
