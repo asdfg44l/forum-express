@@ -10,6 +10,7 @@ const passport = require('passport')
 const usePassport = require('./config/passport')
 const hbsHelpers = require('./utils/handlebarsHelpers')
 
+require('./config/dotent').loadEnv()
 const port = process.env.PORT || 3000
 
 //view engine
