@@ -1,4 +1,4 @@
-const { Restaurant } = require('../models')
+const { Restaurant, User } = require('../models')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
@@ -122,6 +122,28 @@ const adminController = {
       await restaurant.destroy()
 
       return res.redirect('/admin/restaurants')
+    } catch (e) {
+      console.warn(e)
+    }
+  },
+
+  //user
+  getUsers: async (req, res) => {
+    try {
+      let users = await User.findAll({ raw: true })
+
+      return res.render('admin/users', { users })
+    } catch (e) {
+      console.warn(e)
+    }
+  },
+  toggleAdmin: async (req, res) => {
+    const user_id = req.params.id
+    try {
+      let user = await User.findByPk(user_id)
+      await user.update({ isAdmin: !user.isAdmin })
+
+      return res.redirect('/admin/users')
     } catch (e) {
       console.warn(e)
     }
