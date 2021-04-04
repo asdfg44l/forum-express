@@ -1,6 +1,14 @@
+const { Restaurant } = require('../models')
+
 const restController = {
-  getRestaurants: (req, res) => {
-    return res.render('restaurants')
+  getRestaurants: async (req, res) => {
+    try {
+      let restaurants = await Restaurant.findAll({ raw: true })
+      return res.render('restaurants', { restaurants })
+    } catch (e) {
+      console.warn(e)
+    }
+
   }
 }
 

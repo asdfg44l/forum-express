@@ -26,9 +26,9 @@
           {{else}}
           <a href="/admin/restaurants" class="btn">前往後台</a>
           {{/if}}
-
+          <span>Hi,{{user.email}}</span>
           {{#if isAuthenticated}}
-          <a href="/users/logout" class="btn">登出</a>
+          <a href="/users/logout" class="btn btn-link">登出</a>
           {{else}}
           <a href="/users/signIn" class="btn">登入</a>
           {{/if}}
