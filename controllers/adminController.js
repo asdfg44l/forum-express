@@ -1,10 +1,15 @@
-const { Restaurant, User } = require('../models')
+const { Restaurant, User, Category } = require('../models')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
 const adminController = {
   getRestaurants: async (req, res) => {
-    let restaurants = await Restaurant.findAll({ raw: true })
+    let restaurants = await Restaurant.findAll({
+      raw: true,
+      nest: true,
+      include: [Category]
+    })
+
     return res.render('admin/restaurants', { restaurants })
   },
 
@@ -54,9 +59,12 @@ const adminController = {
   getRestaurant: async (req, res) => {
     const restaurant_id = req.params.id
     try {
-      let restaurant = await Restaurant.findByPk(restaurant_id, { raw: true })
-
-      return res.render('admin/detail', { restaurant })
+      let restaurant = await Restaurant.findByPk(
+        restaurant_id,
+        { include: [Category] }
+      )
+      console.log(restaurant)
+      return res.render('admin/detail', { restaurant: restaurant.toJSON() })
     } catch (e) {
       console.warn(e)
     }
@@ -70,7 +78,6 @@ const adminController = {
     }
     try {
       let restaurant = await Restaurant.findByPk(restaurant_id, { raw: true })
-
       return res.render('admin/create', { config, restaurant })
     } catch (e) {
       console.warn(e)
