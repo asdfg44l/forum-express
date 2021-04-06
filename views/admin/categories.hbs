@@ -53,7 +53,7 @@
                 </a>
               </button>
               <form action="/admin/categories/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
-                <button type="submit" class="btn btn-link">Delete</button>
+                <button type="submit" class="btn btn-link" onclick="return confirmWhileDelete()">Delete</button>
               </form>
             </td>
           </tr>
@@ -83,4 +83,8 @@
       });
     }, false);
   })();
+
+  function confirmWhileDelete() {
+    return confirm("確定要刪除嗎?")
+  }
 </script>
