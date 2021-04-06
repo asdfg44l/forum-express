@@ -1,6 +1,7 @@
 const restController = require('../controllers/restController')
 const adminController = require('../controllers/adminController')
 const userController = require('../controllers/userController')
+const categoryController = require('../controllers/categoryController')
 const { authenticated, authenticatedAdmin } = require('../middleware/auth')
 
 const multer = require('multer')
@@ -43,4 +44,7 @@ module.exports = (app, passport) => {
     })
   )
   app.get('/users/logout', userController.logout)
+
+  //category
+  app.get('/admin/categories', authenticatedAdmin, categoryController.getCategories)
 }
