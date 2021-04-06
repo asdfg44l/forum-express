@@ -3,7 +3,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.addColumn('Restaurants', 'CategoryId', {
-      type: Sequelize.STRING,
+      type: Sequelize.INTEGER,
       allowNull: false,
       reference: {
         model: 'Categories',
