@@ -15,7 +15,7 @@
           <label for="categoryId">Category*</label>
           <select class="form-control" name="categoryId" id="categoryId" required>
             {{#each categories}}
-            <option value="{{this.id}}" {{#if this.id===restaurant.CategoryId}} selected {{/if}}>
+            <option value="{{this.id}}" {{#isEqual this.id ../restaurant.CategoryId}} selected {{/isEqual}}>
               {{this.name}}
             </option>
             {{/each}}

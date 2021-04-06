@@ -9,7 +9,7 @@ const methodOverride = require('method-override')
 const passport = require('passport')
 const usePassport = require('./config/passport')
 const helpers = require('./_helpers')
-const hbsHelpers = require('./utils/handlebarsHelpers')
+const hbsHelpers = require('./config/handlebars-helpers')
 
 require('./config/dotent').loadEnv()
 const port = process.env.PORT || 3000
