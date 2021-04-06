@@ -13,15 +13,17 @@ const adminController = {
     return res.render('admin/restaurants', { restaurants })
   },
 
-  createRestaurant: (req, res) => {
+  createRestaurant: async (req, res) => {
     const config = {
       pageTitle: '新增餐廳',
       method: '/admin/restaurants'
     }
-    return res.render('admin/create', { config })
+    let categories = await Category.findAll({ raw: true, nest: true })
+
+    return res.render('admin/create', { config, categories })
   },
   postRestaurat: async (req, res) => {
-    const { name, tel, address, opening_hours, description } = req.body
+    const { name, categoryId, tel, address, opening_hours, description } = req.body
     const { file } = req
     try {
       if (file) {
@@ -33,7 +35,8 @@ const adminController = {
             address,
             opening_hours,
             description,
-            image: file ? img.data.link : null
+            image: file ? img.data.link : null,
+            CategoryId: categoryId
           })
           req.flash('success_msg', `成功新增餐廳: "${name}"`)
           return res.redirect('/admin/restaurants')
@@ -45,7 +48,8 @@ const adminController = {
           address,
           opening_hours,
           description,
-          image: null
+          image: null,
+          CategoryId: categoryId
         })
 
         req.flash('success_msg', `成功新增餐廳: "${name}"`)
@@ -63,7 +67,7 @@ const adminController = {
         restaurant_id,
         { include: [Category] }
       )
-      console.log(restaurant)
+
       return res.render('admin/detail', { restaurant: restaurant.toJSON() })
     } catch (e) {
       console.warn(e)
@@ -78,7 +82,8 @@ const adminController = {
     }
     try {
       let restaurant = await Restaurant.findByPk(restaurant_id, { raw: true })
-      return res.render('admin/create', { config, restaurant })
+      let categories = await Category.findAll({ raw: true, nest: true })
+      return res.render('admin/create', { config, restaurant, categories })
     } catch (e) {
       console.warn(e)
     }
@@ -86,7 +91,7 @@ const adminController = {
 
   putRestaurant: async (req, res) => {
     const restaurant_id = req.params.id
-    const { name, tel, address, opening_hours, description, image } = req.body
+    const { name, categoryId, tel, address, opening_hours, description } = req.body
     const { file } = req
     try {
       if (file) {
@@ -99,7 +104,8 @@ const adminController = {
             address,
             opening_hours,
             description,
-            image: file ? img.data.link : restaurant.image
+            image: file ? img.data.link : restaurant.image,
+            CategoryId: categoryId
           })
           req.flash('success_msg', `成功修改餐廳: "${name}"`)
           return res.redirect('/admin/restaurants')
@@ -112,7 +118,8 @@ const adminController = {
           address,
           opening_hours,
           description,
-          image: restaurant.image
+          image: restaurant.image,
+          CategoryId: categoryId
         })
         req.flash('success_msg', `成功修改餐廳: "${name}"`)
         return res.redirect('/admin/restaurants')

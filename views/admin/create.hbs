@@ -12,6 +12,16 @@
         </div>
 
         <div class="form-group">
+          <label for="categoryId">Category*</label>
+          <select class="form-control" name="categoryId" id="categoryId" required>
+            {{#each categories}}
+            <option value="{{this.id}}" {{#if this.id===restaurant.CategoryId}} selected {{/if}}>
+              {{this.name}}
+            </option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="form-group">
           <label for="tel">Tel*</label>
           <input type="text" class="form-control" name="tel" id="tel" placeholder="Enter tel" required
             value="{{restaurant.tel}}">
