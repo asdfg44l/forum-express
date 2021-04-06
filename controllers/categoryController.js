@@ -2,8 +2,13 @@ const { Category } = require('../models')
 
 let categoryController = {
   getCategories: async (req, res) => {
+    const category_id = req.params.id
     try {
       let categories = await Category.findAll({ raw: true, nest: true })
+      if (category_id) {
+        let edit_category = await Category.findByPk(category_id)
+        return res.render('admin/categories', { categories, category: edit_category.toJSON() })
+      }
       return res.render('admin/categories', { categories })
     } catch (e) {
       console.warn(e)
@@ -19,6 +24,17 @@ let categoryController = {
       }
       await Category.create({ name })
 
+      return res.redirect('/admin/categories')
+    } catch (e) {
+      console.warn(e)
+    }
+  },
+  putCategory: async (req, res) => {
+    const category_id = req.params.id
+    const { name } = req.body
+    try {
+      let category = await Category.findByPk(category_id)
+      await category.update({ name })
       return res.redirect('/admin/categories')
     } catch (e) {
       console.warn(e)
