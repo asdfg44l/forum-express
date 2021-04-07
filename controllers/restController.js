@@ -1,4 +1,4 @@
-const { Restaurant, Category } = require('../models')
+const { Restaurant, Category, Comment, User } = require('../models')
 
 const pageLimit = 10
 
@@ -39,7 +39,12 @@ const restController = {
   getRestaurant: async (req, res) => {
     const restaurant_id = req.params.id
     try {
-      let restaurant = await Restaurant.findByPk(restaurant_id, { include: [Category] })
+      let restaurant = await Restaurant.findByPk(restaurant_id, {
+        include: [
+          Category,
+          { model: Comment, include: [User] }
+        ]
+      })
       return res.render('detail', { restaurant: restaurant.toJSON() })
     } catch (e) {
       console.warn(e)
