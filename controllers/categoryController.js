@@ -1,6 +1,6 @@
 const { Category } = require('../models')
 
-let categoryController = {
+const categoryController = {
   getCategories: async (req, res) => {
     const category_id = req.params.id
     try {

@@ -13,6 +13,7 @@ module.exports = (app, passport) => {
     return res.redirect('/restaurants')
   })
   app.get('/restaurants', authenticated, restController.getRestaurants)
+  app.get('/restaurants/:id', authenticated, restController.getRestaurant)
 
   //admin
   app.get('/admin', authenticatedAdmin, (req, res) => {
