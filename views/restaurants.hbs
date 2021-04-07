@@ -34,6 +34,24 @@
     </div>
     {{/each}}
   </div>
-</div>
-</div>
+
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li class="page-item">
+        <a class="page-link" href="/restaurants?page={{prev}}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      {{#each totalPage}}
+      <li class="page-item {{#isEqual this ../page}}active{{/isEqual}}">
+        <a class="page-link" href="/restaurants?page={{this}}">{{this}}</a>
+      </li>
+      {{/each}}
+      <li class="page-item">
+        <a class="page-link" href="/restaurants?page={{next}}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
 </div>
