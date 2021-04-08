@@ -1,8 +1,9 @@
 const { Comment } = require('../models')
+const { getUser } = require('../_helpers')
 
 const commentController = {
   postComment: async (req, res) => {
-    const user_id = req.user.id
+    const user_id = getUser(req).id
     const { text, restaurantId } = req.body
     try {
       await Comment.create({

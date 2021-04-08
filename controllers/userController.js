@@ -35,10 +35,6 @@ const userController = {
     return res.render('signIn')
   },
 
-  signInPage: (req, res) => {
-    res.render('signIn')
-  },
-
   logout: (req, res) => {
     req.logout()
     res.redirect('/users/signIn')
