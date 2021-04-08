@@ -1,5 +1,8 @@
 const bcrypt = require('bcryptjs')
 const { User } = require('../models')
+const imgur = require('imgur-node-api')
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
+// const { getUser } = require('../_helpers')
 
 const userController = {
   signUpPage: (req, res) => {
@@ -38,6 +41,57 @@ const userController = {
   logout: (req, res) => {
     req.logout()
     res.redirect('/users/signIn')
+  },
+
+  //profile
+  getUser: async (req, res) => {
+    const user_id = req.params.id
+
+    try {
+      let user = await User.findByPk(user_id)
+
+      return res.render('profile/index', { user: user.toJSON() })
+    } catch (e) {
+      console.warn(e)
+    }
+  },
+  editUser: async (req, res) => {
+    const user_id = req.params.id
+    try {
+      let user = await User.findByPk(user_id)
+
+      return res.render('profile/edit', { user: user.toJSON() })
+    } catch (e) {
+      console.warn(e)
+    }
+  },
+  putUser: async (req, res) => {
+    const user_id = req.params.id
+    const { name } = req.body
+    const { file } = req
+    try {
+      if (file) {
+        imgur.setClientID(IMGUR_CLIENT_ID)
+        imgur.upload(file.path, async (err, img) => {
+          let user = await User.findByPk(user_id)
+          await user.update({
+            name,
+            image: file ? img.data.link : user.image
+          })
+
+          return res.redirect(`/users/${user_id}`)
+        })
+      } else {
+        let user = await User.findByPk(user_id)
+        await user.update({
+          name,
+          image: user.image
+        })
+        return res.redirect(`/users/${user_id}`)
+      }
+    } catch (e) {
+      console.warn(e)
+    }
   }
 }
 

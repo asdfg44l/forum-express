@@ -47,6 +47,11 @@ module.exports = (app, passport) => {
   )
   app.get('/users/logout', userController.logout)
 
+  //profile
+  app.get('/users/:id', userController.getUser)
+  app.get('/users/:id/edit', userController.editUser)
+  app.put('/users/:id', upload.single('image'), userController.putUser)
+
   //category
   app.get('/admin/categories', authenticatedAdmin, categoryController.getCategories)
   app.post('/admin/categories', authenticatedAdmin, categoryController.postCategory)
