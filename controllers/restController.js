@@ -31,7 +31,9 @@ const restController = {
 
       let categories = await Category.findAll({ raw: true, nest: true })
 
-      return res.render('restaurants', { restaurants: data, categories, categoryId, page, totalPage, prev, next })
+      const currentPage = 'index'
+
+      return res.render('restaurants', { restaurants: data, categories, categoryId, page, totalPage, prev, next, currentPage })
     } catch (e) {
       console.warn(e)
     }
@@ -46,6 +48,33 @@ const restController = {
         ]
       })
       return res.render('detail', { restaurant: restaurant.toJSON() })
+    } catch (e) {
+      console.warn(e)
+    }
+  },
+  getFeeds: async (req, res) => {
+    try {
+      let getRestaurant = Restaurant.findAll({
+        raw: true,
+        nest: true,
+        limit: 10,
+        order: [['createdAt', 'DESC']],
+        include: [Category]
+      })
+
+      let getComment = Comment.findAll({
+        raw: true,
+        nest: true,
+        limit: 10,
+        order: [['createdAt', 'DESC']],
+        include: [Restaurant, User]
+      })
+
+      let [restaurants, comments] = await Promise.all([getRestaurant, getComment])
+
+      const currentPage = 'feeds'
+
+      return res.render('feeds', { restaurants, comments, currentPage })
     } catch (e) {
       console.warn(e)
     }
