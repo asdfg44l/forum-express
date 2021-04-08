@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const exphbs = require('express-handlebars')
-const db = require('./models')
+// const db = require('./models')
 const { urlencoded } = require('body-parser')
 const flash = require('connect-flash')
 const session = require('express-session')
@@ -39,7 +39,7 @@ app.use('/upload', express.static(__dirname + '/upload'))
 
 //listening
 app.listen(port, () => {
-  db.sequelize.sync()
+  // db.sequelize.sync()
   console.log(`Example app listening at http://localhost:${port}`)
 })
 
