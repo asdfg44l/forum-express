@@ -1,4 +1,5 @@
 const { Restaurant, Category, Comment, User } = require('../models')
+const { getUser } = require('../_helpers')
 
 const pageLimit = 10
 
@@ -26,7 +27,8 @@ const restController = {
       const data = result.rows.map(r => ({
         ...r.dataValues,
         description: r.description.substring(0, 50),
-        categoryName: r.Category.name
+        categoryName: r.Category.name,
+        isFavorited: getUser(req).FavoritedRestaurants.map(d => d.id).includes(r.id)
       }))
 
       let categories = await Category.findAll({ raw: true, nest: true })
@@ -39,20 +41,23 @@ const restController = {
     }
   },
   getRestaurant: async (req, res) => {
+    const user_id = getUser(req).id
     const restaurant_id = req.params.id
     try {
       let restaurant = await Restaurant.findByPk(restaurant_id, {
         include: [
           Category,
+          { model: User, as: 'FavoritedUsers' },
           { model: Comment, include: [User] }
         ]
       })
+      const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(user_id)
       //新增瀏覽次數
       restaurant = await restaurant.update({
         viewCounts: restaurant.viewCounts += 1
       })
 
-      return res.render('detail', { restaurant: restaurant.toJSON() })
+      return res.render('detail', { restaurant: restaurant.toJSON(), isFavorited })
     } catch (e) {
       console.warn(e)
     }

@@ -1,7 +1,7 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const bcrypt = require('bcryptjs')
-const { User } = require('../models')
+const { User, Restaurant } = require('../models')
 
 module.exports = app => {
   //init
@@ -40,7 +40,11 @@ module.exports = app => {
   //去序列化
   passport.deserializeUser(async (id, done) => {
     try {
-      let user = await User.findByPk(id)
+      let user = await User.findByPk(id, {
+        include: [
+          { model: Restaurant, as: 'FavoritedRestaurants' }
+        ]
+      })
       return done(null, user.toJSON())
     } catch (e) {
       return done(e, false)
