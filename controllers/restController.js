@@ -49,7 +49,7 @@ const restController = {
       })
       //新增瀏覽次數
       restaurant = await restaurant.update({
-        NumberOfViews: restaurant.NumberOfViews += 1
+        viewCounts: restaurant.viewCounts += 1
       })
 
       return res.render('detail', { restaurant: restaurant.toJSON() })
