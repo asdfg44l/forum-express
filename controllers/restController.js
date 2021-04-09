@@ -51,7 +51,10 @@ const restController = {
           { model: Comment, include: [User] }
         ]
       })
+      //也可以用像 getRestaurants 裡的方法 (使用者將那些餐廳加到最愛)
+      //這裡是取出這間餐廳有哪些使用者加到最愛
       const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(user_id)
+
       //新增瀏覽次數
       restaurant = await restaurant.update({
         viewCounts: restaurant.viewCounts += 1
