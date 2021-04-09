@@ -28,7 +28,8 @@ const restController = {
         ...r.dataValues,
         description: r.description.substring(0, 50),
         categoryName: r.Category.name,
-        isFavorited: getUser(req).FavoritedRestaurants.map(d => d.id).includes(r.id)
+        isFavorited: getUser(req).FavoritedRestaurants.map(d => d.id).includes(r.id),
+        isLiked: getUser(req).LikedRestaurants.map(d => d.id).includes(r.id)
       }))
 
       let categories = await Category.findAll({ raw: true, nest: true })
@@ -48,6 +49,7 @@ const restController = {
         include: [
           Category,
           { model: User, as: 'FavoritedUsers' },
+          { model: User, as: 'LikedUsers' },
           { model: Comment, include: [User] }
         ]
       })
@@ -55,12 +57,15 @@ const restController = {
       //這裡是取出這間餐廳有哪些使用者加到最愛
       const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(user_id)
 
+      //like的做法同理
+      const isLiked = restaurant.LikedUsers.map(d => d.id).includes(user_id)
+
       //新增瀏覽次數
       restaurant = await restaurant.update({
         viewCounts: restaurant.viewCounts += 1
       })
 
-      return res.render('detail', { restaurant: restaurant.toJSON(), isFavorited })
+      return res.render('detail', { restaurant: restaurant.toJSON(), isFavorited, isLiked })
     } catch (e) {
       console.warn(e)
     }
