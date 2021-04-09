@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn('Restaurants', 'viewCounts', {
+    await queryInterface.addColumn('Restaurants', 'NumberOfViews', {
       type: Sequelize.INTEGER,
       defaultValue: 0
     })
@@ -15,7 +15,7 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.removeColumn('Restaurants', 'viewCounts')
+    await queryInterface.removeColumn('Restaurants', 'NumberOfViews')
     /**
      * Add reverting commands here.
      *
