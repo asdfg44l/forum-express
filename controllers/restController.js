@@ -47,6 +47,11 @@ const restController = {
           { model: Comment, include: [User] }
         ]
       })
+      //新增瀏覽次數
+      restaurant = await restaurant.update({
+        NumberOfViews: restaurant.NumberOfViews += 1
+      })
+
       return res.render('detail', { restaurant: restaurant.toJSON() })
     } catch (e) {
       console.warn(e)
@@ -78,6 +83,9 @@ const restController = {
     } catch (e) {
       console.warn(e)
     }
+  },
+  getDashboard: async (req, res) => {
+    return res.render('dashboard')
   }
 }
 
