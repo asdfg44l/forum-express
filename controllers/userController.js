@@ -108,7 +108,7 @@ const userController = {
         RestaurantId: restaurant_id
       })
 
-      return res.redirect('/restaurants')
+      return res.redirect('back')
     } catch (e) {
       console.warn(e)
     }
@@ -120,7 +120,7 @@ const userController = {
       let favorite = await Favorite.findOne({ where: { UserId: user_id, RestaurantId: restaurant_id } })
       await favorite.destroy()
 
-      return res.redirect('/restaurants')
+      return res.redirect('back')
     } catch (e) {
       console.warn(e)
     }

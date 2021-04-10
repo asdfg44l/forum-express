@@ -1,0 +1,26 @@
+<div class="row mt-3">
+  <div class="col-md-10 mx-auto">
+    {{>tabs}}
+    <h3>人氣餐廳</h3>
+    {{#each restaurants}}
+    <div class="media shadow-sm p-3 mb-5 bg-white rounded">
+      <img src="{{ this.image }}" class="mr-3" alt="{{ this.name }}">
+      <div class="media-body">
+        <h5 class="mt-0">{{ this.name }}</h5>
+        <div class="badge badge-secondary">收藏數: {{ this.favoriteCount }}</div>
+        <div class="">{{ this.description }}</div>
+        <div class="d-flex mt-3">
+          <a href="/restaurants/{{ this.id }}" class="btn btn-info mr-2">Show</a>
+          {{#if this.isFavorited }}
+          <form action="/favorite/{{this.id}}?_method=DELETE" method="POST"><button type="submit"
+              class="btn btn-danger">移除最愛</button></form>
+          {{else}}
+          <form action="/favorite/{{this.id}}" method="POST"><button type="submit" class="btn btn-primary">加到最愛</button>
+          </form>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</div>
