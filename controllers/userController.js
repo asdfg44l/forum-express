@@ -167,11 +167,42 @@ const userController = {
         isFollowed: getUser(req).Followings.map(d => d.id).includes(user.id)
       }))
 
-      users = user.sort((a, b) => b.FollowerCount - a.FollowerCount)
+      users = users.sort((a, b) => b.FollowerCount - a.FollowerCount)
 
       const currentPage = 'topUser'
 
       return res.render('topUser', { users, currentPage })
+    } catch (e) {
+      console.warn(e)
+    }
+  },
+  addFollowing: async (req, res) => {
+    const user_id = getUser(req).id
+    const following_id = req.params.userId
+    try {
+      await Followship.create({
+        followerId: user_id,
+        followingId: following_id
+      })
+
+      return res.redirect('/users/top')
+    } catch (e) {
+      console.warn(e)
+    }
+  },
+  removeFollowing: async (req, res) => {
+    const user_id = getUser(req).id
+    const following_id = req.params.userId
+    try {
+      let followShip = await Followship.findOne({
+        where: {
+          followerId: user_id,
+          followingId: following_id
+        }
+      })
+
+      await followShip.destroy()
+      return res.redirect('/users/top')
     } catch (e) {
       console.warn(e)
     }
