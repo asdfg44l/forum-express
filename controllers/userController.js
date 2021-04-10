@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs')
-const { User, Comment, Restaurant, Favorite, Like } = require('../models')
+const { User, Comment, Restaurant, Favorite, Like, Followship } = require('../models')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 const { getUser } = require('../_helpers')
@@ -149,6 +149,29 @@ const userController = {
       await like.destroy()
 
       return res.redirect('/restaurants')
+    } catch (e) {
+      console.warn(e)
+    }
+  },
+  getTopUser: async (req, res) => {
+    try {
+      let users = await User.findAll({
+        include: [
+          { model: User, as: 'Followers' }
+        ]
+      })
+
+      users = users.map(user => ({
+        ...user.dataValues,
+        FollowerCount: user.Followers.length,
+        isFollowed: getUser(req).Followings.map(d => d.id).includes(user.id)
+      }))
+
+      users = user.sort((a, b) => b.FollowerCount - a.FollowerCount)
+
+      const currentPage = 'topUser'
+
+      return res.render('topUser', { users, currentPage })
     } catch (e) {
       console.warn(e)
     }

@@ -45,7 +45,7 @@ module.exports = app => {
           { model: Restaurant, as: 'FavoritedRestaurants' },
           { model: Restaurant, as: 'LikedRestaurants' },
           { model: User, as: 'Followers' },
-          { model: User, as: 'Followerings' }
+          { model: User, as: 'Followings' }
         ]
       })
       return done(null, user.toJSON())
