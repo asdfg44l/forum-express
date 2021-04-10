@@ -108,7 +108,7 @@ const userController = {
         RestaurantId: restaurant_id
       })
 
-      return res.redirect(`/restaurants/${restaurant_id}`)
+      return res.redirect('/restaurants')
     } catch (e) {
       console.warn(e)
     }
@@ -136,7 +136,7 @@ const userController = {
         RestaurantId: restaurant_id
       })
 
-      return res.redirect(`/restaurants/${restaurant_id}`)
+      return res.redirect('/restaurants')
     } catch (e) {
       console.warn(e)
     }
