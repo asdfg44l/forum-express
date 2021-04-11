@@ -1,5 +1,6 @@
-const { Restaurant, Category, Comment, User, Favorite } = require('../models')
+const { Restaurant, Category, Comment, User } = require('../models')
 const { getUser } = require('../_helpers')
+const Sequelize = require('sequelize')
 
 const pageLimit = 10
 
@@ -122,7 +123,23 @@ const restController = {
       let restaurants = await Restaurant.findAll({
         include: [
           { model: User, as: 'FavoritedUsers' }
-        ]
+        ],
+        attributes: {
+          include: [
+            [
+              Sequelize.literal(`(
+                SELECT COUNT(*) FROM favorites
+                WHERE Restaurant.id = favorites.RestaurantId
+                GROUP BY Restaurant.id
+              )`), 'favoritesUserCount'
+            ]
+          ]
+        },
+        order: [
+          [Sequelize.literal('favoritesUserCount'), 'DESC'],
+          ['id', 'ASC']
+        ],
+        limit: 10
       })
 
       restaurants = restaurants.map(r => ({
@@ -130,9 +147,6 @@ const restController = {
         favoriteCount: r.FavoritedUsers.length,
         isFavorited: getUser(req).FavoritedRestaurants.map(d => d.id).includes(r.id)
       }))
-
-      restaurants = restaurants.sort((a, b) => b.favoriteCount - a.favoriteCount)
-      restaurants = restaurants.slice(0, 10)
 
       const currentPage = 'topRestaurant'
 
