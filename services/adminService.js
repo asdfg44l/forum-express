@@ -11,6 +11,19 @@ const adminService = {
     })
 
     return callback({ restaurants })
+  },
+  getRestaurant: async (req, res, callback) => {
+    const restaurant_id = req.params.id
+    try {
+      let restaurant = await Restaurant.findByPk(
+        restaurant_id,
+        { include: [Category] }
+      )
+
+      return callback({ restaurant: restaurant.toJSON() })
+    } catch (e) {
+      console.warn(e)
+    }
   }
 }
 
