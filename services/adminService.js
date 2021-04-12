@@ -65,6 +65,50 @@ const adminService = {
       return callback({ status: 'error', message: '' })
     }
   },
+  putRestaurant: async (req, res, callback) => {
+    const restaurant_id = req.params.id
+    const { name, categoryId, tel, address, opening_hours, description } = req.body
+    const { file } = req
+    if (!name || !categoryId) {
+      return callback({ status: 'error', message: '必填欄位未填' })
+    }
+    try {
+      if (file) {
+        imgur.setClientID(IMGUR_CLIENT_ID)
+        imgur.upload(file.path, async (err, img) => {
+          let restaurant = await Restaurant.findByPk(restaurant_id)
+          await restaurant.update({
+            name,
+            tel,
+            address,
+            opening_hours,
+            description,
+            image: file ? img.data.link : restaurant.image,
+            CategoryId: categoryId
+          })
+          return callback({ status: 'success', message: '成功修改餐廳' })
+          // req.flash('success_msg', `成功修改餐廳: "${name}"`)
+          // return res.redirect('/admin/restaurants')
+        })
+      } else {
+        let restaurant = await Restaurant.findByPk(restaurant_id)
+        await restaurant.update({
+          name,
+          tel,
+          address,
+          opening_hours,
+          description,
+          image: restaurant.image,
+          CategoryId: categoryId
+        })
+        return callback({ status: 'success', message: '成功修改餐廳' })
+        // req.flash('success_msg', `成功修改餐廳: "${name}"`)
+        // return res.redirect('/admin/restaurants')
+      }
+    } catch (e) {
+      return callback({ status: 'error', message: '' })
+    }
+  },
   deleteRestaurant: async (req, res, callback) => {
     const restaurant_id = req.params.id
 
@@ -74,7 +118,7 @@ const adminService = {
 
       return callback({ status: 'success', message: '' })
     } catch (e) {
-      return res.json({ status: 'error', message: '' })
+      return callback({ status: 'error', message: '' })
     }
   },
 }

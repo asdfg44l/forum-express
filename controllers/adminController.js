@@ -53,43 +53,14 @@ const adminController = {
   },
 
   putRestaurant: async (req, res) => {
-    const restaurant_id = req.params.id
-    const { name, categoryId, tel, address, opening_hours, description } = req.body
-    const { file } = req
-    try {
-      if (file) {
-        imgur.setClientID(IMGUR_CLIENT_ID)
-        imgur.upload(file.path, async (err, img) => {
-          let restaurant = await Restaurant.findByPk(restaurant_id)
-          await restaurant.update({
-            name,
-            tel,
-            address,
-            opening_hours,
-            description,
-            image: file ? img.data.link : restaurant.image,
-            CategoryId: categoryId
-          })
-          req.flash('success_msg', `成功修改餐廳: "${name}"`)
-          return res.redirect('/admin/restaurants')
-        })
-      } else {
-        let restaurant = await Restaurant.findByPk(restaurant_id)
-        await restaurant.update({
-          name,
-          tel,
-          address,
-          opening_hours,
-          description,
-          image: restaurant.image,
-          CategoryId: categoryId
-        })
-        req.flash('success_msg', `成功修改餐廳: "${name}"`)
+    adminService.putRestaurant(req, res, (data) => {
+      if (data.status === 'error') {
+        req.flash('errpr_msg', data.message)
         return res.redirect('/admin/restaurants')
       }
-    } catch (e) {
-      console.warn(e)
-    }
+      req.flash('success_msg', '成功修改餐廳')
+      return res.redirect('/admin/restaurants')
+    })
   },
   deleteRestaurant: (req, res) => {
     adminService.deleteRestaurant(req, res, (data) => {
