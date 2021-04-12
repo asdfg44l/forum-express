@@ -16,6 +16,9 @@ const categoryService = {
   },
   postCategory: async (req, res, callback) => {
     const { name } = req.body
+    if (!name) {
+      return callback({ status: 'error', message: '名稱為必填' })
+    }
     try {
       let ifCatrgory = await Category.findOne({ where: { name } })
       if (ifCatrgory) {
@@ -29,6 +32,21 @@ const categoryService = {
       return callback({ status: 'success', message: '已新增分類' })
     } catch (e) {
       return callback({ status: 'error', message: '' })
+    }
+  },
+  putCategory: async (req, res, callback) => {
+    const category_id = req.params.id
+    const { name } = req.body
+    if (!name) {
+      return callback({ status: 'error', message: '名稱為必填' })
+    }
+    try {
+      let category = await Category.findByPk(category_id)
+      await category.update({ name })
+      // return res.redirect('/admin/categories')
+      return callback({ status: 'success', message: '分類名稱已變更' })
+    } catch (e) {
+      return callback({ status: 'error', message: '變更失敗' })
     }
   },
 }

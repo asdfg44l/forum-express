@@ -16,5 +16,5 @@ router.delete('/admin/restaurants/:id', apiAdminController.deleteRestaurant)
 //category
 router.get('/admin/categories', apiCategoryController.getCategories)
 router.post('/admin/categories', apiCategoryController.postCategory)
-
+router.put('/admin/categories/:id', apiCategoryController.putCategory)
 module.exports = router

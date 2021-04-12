@@ -18,16 +18,15 @@ const categoryController = {
       return res.redirect('/admin/categories')
     })
   },
-  putCategory: async (req, res) => {
-    const category_id = req.params.id
-    const { name } = req.body
-    try {
-      let category = await Category.findByPk(category_id)
-      await category.update({ name })
+  putCategory: (req, res) => {
+    categoryService.putCategory(req, res, (data) => {
+      if (data.status === 'error') {
+        req.flash('error_msg', data.message)
+        return res.redirect('/admin/categories')
+      }
+      req.flash('success_msg', data.message)
       return res.redirect('/admin/categories')
-    } catch (e) {
-      console.warn(e)
-    }
+    })
   },
   deleteCategory: async (req, res) => {
     const category_id = req.params.id
