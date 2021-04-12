@@ -8,20 +8,15 @@ const categoryController = {
       return res.render('admin/categories', data)
     })
   },
-  postCategory: async (req, res) => {
-    const { name } = req.body
-    try {
-      let ifCatrgory = await Category.findOne({ where: { name } })
-      if (ifCatrgory) {
-        req.flash('error_msg', '已有此分類')
+  postCategory: (req, res) => {
+    categoryService.postCategory(req, res, (data) => {
+      if (data.status === 'error') {
+        req.flash('error_msg', data.message)
         return res.redirect('/admin/categories')
       }
-      await Category.create({ name })
-
+      req.flash('success_msg'.data.message)
       return res.redirect('/admin/categories')
-    } catch (e) {
-      console.warn(e)
-    }
+    })
   },
   putCategory: async (req, res) => {
     const category_id = req.params.id

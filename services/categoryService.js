@@ -13,7 +13,24 @@ const categoryService = {
     } catch (e) {
       console.warn(e)
     }
-  }
+  },
+  postCategory: async (req, res, callback) => {
+    const { name } = req.body
+    try {
+      let ifCatrgory = await Category.findOne({ where: { name } })
+      if (ifCatrgory) {
+        // req.flash('error_msg', '已有此分類')
+        // return res.redirect('/admin/categories')
+        return callback({ status: 'error', message: '已有此分類' })
+      }
+      await Category.create({ name })
+
+      // return res.redirect('/admin/categories')
+      return callback({ status: 'success', message: '已新增分類' })
+    } catch (e) {
+      return callback({ status: 'error', message: '' })
+    }
+  },
 }
 
 module.exports = categoryService

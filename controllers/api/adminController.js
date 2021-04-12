@@ -18,7 +18,7 @@ const adminController = {
       return res.json(data)
     })
   },
-  putRestaurant: async (req, res) => {
+  putRestaurant: (req, res) => {
     adminService.putRestaurant(req, res, (data) => {
       return res.json(data)
     })
