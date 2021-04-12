@@ -58,6 +58,6 @@ app.use((req, res, next) => {
   return next()
 })
 
-require('./routes')(app, passport)
+require('./routes')(app)
 
 module.exports = app
