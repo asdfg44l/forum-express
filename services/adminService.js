@@ -25,6 +25,46 @@ const adminService = {
       console.warn(e)
     }
   },
+  postRestaurat: async (req, res, callback) => {
+    const { name, categoryId, tel, address, opening_hours, description } = req.body
+    const { file } = req
+    if (!name || !categoryId) {
+      return callback({ status: 'error', message: '必填欄位未填' })
+    }
+    try {
+      if (file) {
+        imgur.setClientID(IMGUR_CLIENT_ID)
+        imgur.upload(file.path, async (err, img) => {
+          await Restaurant.create({
+            name,
+            tel,
+            address,
+            opening_hours,
+            description,
+            image: file ? img.data.link : null,
+            CategoryId: categoryId
+          })
+          // req.flash('success_msg', `成功新增餐廳: "${name}"`)
+          return callback({ status: 'success', message: '成功新增餐廳' })
+        })
+      } else {
+        await Restaurant.create({
+          name,
+          tel,
+          address,
+          opening_hours,
+          description,
+          image: null,
+          CategoryId: categoryId
+        })
+
+        // req.flash('success_msg', `成功新增餐廳: "${name}"`)
+        return callback({ status: 'success', message: '成功新增餐廳' })
+      }
+    } catch (e) {
+      return callback({ status: 'error', message: '' })
+    }
+  },
   deleteRestaurant: async (req, res, callback) => {
     const restaurant_id = req.params.id
 
@@ -34,7 +74,7 @@ const adminService = {
 
       return callback({ status: 'success', message: '' })
     } catch (e) {
-      console.warn(e)
+      return res.json({ status: 'error', message: '' })
     }
   },
 }

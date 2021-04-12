@@ -20,42 +20,15 @@ const adminController = {
 
     return res.render('admin/create', { config, categories })
   },
-  postRestaurat: async (req, res) => {
-    const { name, categoryId, tel, address, opening_hours, description } = req.body
-    const { file } = req
-    try {
-      if (file) {
-        imgur.setClientID(IMGUR_CLIENT_ID)
-        imgur.upload(file.path, async (err, img) => {
-          await Restaurant.create({
-            name,
-            tel,
-            address,
-            opening_hours,
-            description,
-            image: file ? img.data.link : null,
-            CategoryId: categoryId
-          })
-          req.flash('success_msg', `成功新增餐廳: "${name}"`)
-          return res.redirect('/admin/restaurants')
-        })
-      } else {
-        await Restaurant.create({
-          name,
-          tel,
-          address,
-          opening_hours,
-          description,
-          image: null,
-          CategoryId: categoryId
-        })
-
-        req.flash('success_msg', `成功新增餐廳: "${name}"`)
+  postRestaurat: (req, res) => {
+    adminService.postRestaurat(req, res, (data) => {
+      if (data.status === 'error') {
+        req.flash('error_msg', data.message)
         return res.redirect('/admin/restaurants')
       }
-    } catch (e) {
-      console.warn(e)
-    }
+      req.flash('success_msg', data.message)
+      return res.redirect('/admin/restaurants')
+    })
   },
 
   getRestaurant: (req, res) => {

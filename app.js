@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const exphbs = require('express-handlebars')
 // const db = require('./models')
-const { urlencoded } = require('body-parser')
+const { urlencoded, json } = require('body-parser')
 const flash = require('connect-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
@@ -20,6 +20,7 @@ app.set('view engine', 'hbs')
 
 //bodyParser
 app.use(urlencoded({ extended: true }))
+app.use(json())
 app.use(methodOverride('_method'))
 //session
 app.use(session({
