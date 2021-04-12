@@ -49,6 +49,16 @@ const categoryService = {
       return callback({ status: 'error', message: '變更失敗' })
     }
   },
+  deleteCategory: async (req, res, callback) => {
+    const category_id = req.params.id
+    try {
+      let category = await Category.findByPk(category_id)
+      await category.destroy()
+      return callback({ status: 'success', message: '分類已刪除' })
+    } catch (e) {
+      return callback({ status: 'error', message: '刪除失敗' })
+    }
+  }
 }
 
 module.exports = categoryService
