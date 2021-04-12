@@ -1,14 +1,12 @@
 const { Restaurant, Category } = require('../../models')
 
-const adminController = {
-  getRestaurants: async (req, res) => {
-    let restaurants = await Restaurant.findAll({
-      raw: true,
-      nest: true,
-      include: [Category]
-    })
+const adminService = require('../../services/adminService')
 
-    return res.json({ restaurants })
+const adminController = {
+  getRestaurants: (req, res) => {
+    adminService.getRestaurants(req, res, (data) => {
+      return res.json(data)
+    })
   }
 }
 
